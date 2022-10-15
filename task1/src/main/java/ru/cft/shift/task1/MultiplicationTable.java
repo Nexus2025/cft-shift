@@ -1,13 +1,7 @@
 package ru.cft.shift.task1;
 
-import ru.cft.shift.task1.exception.InvalidValueException;
-
 public class MultiplicationTable {
     private final int size;
-    private final int firstColumnLength;
-    private final int otherColumnLength;
-    private final StringBuilder numbers;
-    private final StringBuilder separator;
 
     private static final String SPACE = " ";
     private static final String PLUS = "+";
@@ -15,29 +9,26 @@ public class MultiplicationTable {
     private static final String VERTICAL_LINE = "|";
     private static final String NEW_LINE = "\n";
 
-    public MultiplicationTable(int size) throws InvalidValueException {
-        if (size < 1) {
-            throw new InvalidValueException("Error. Size must be greater then 0");
-        }
-
+    public MultiplicationTable(int size){
         this.size = size;
-        firstColumnLength = String.valueOf(size).length();
-        otherColumnLength = String.valueOf(size * size).length();
-        numbers = new StringBuilder();
-        separator = new StringBuilder();
     }
 
     public void print() {
-        fillSeparator();
+        int firstColumnLength = String.valueOf(size).length();
+        int otherColumnLength = String.valueOf(size * size).length();
+        StringBuilder numbers = new StringBuilder();
+        StringBuilder separator = new StringBuilder();
+
+        fillSeparator(separator, firstColumnLength, otherColumnLength);
         for (int lineIndex = 0; lineIndex <= size; lineIndex++) {
-            fillFirstColumn(lineIndex);
-            fillOtherColumns(lineIndex);
+            fillFirstColumn(numbers, lineIndex, firstColumnLength);
+            fillOtherColumns(numbers, lineIndex, otherColumnLength);
             System.out.println(numbers + NEW_LINE + separator);
             numbers.setLength(0);
         }
     }
 
-    private void fillSeparator() {
+    private void fillSeparator(StringBuilder separator, int firstColumnLength, int otherColumnLength) {
         if (separator.isEmpty()) {
             separator.append(MINUS.repeat(firstColumnLength));
             for (int columnIndex = 1; columnIndex <= size; columnIndex++) {
@@ -47,7 +38,7 @@ public class MultiplicationTable {
         }
     }
 
-    private void fillFirstColumn(int lineIndex) {
+    private void fillFirstColumn(StringBuilder numbers, int lineIndex, int firstColumnLength) {
         if (lineIndex == 0) {
             numbers.append(SPACE.repeat(firstColumnLength));
         } else {
@@ -57,7 +48,7 @@ public class MultiplicationTable {
         }
     }
 
-    private void fillOtherColumns(int lineIndex) {
+    private void fillOtherColumns(StringBuilder numbers, int lineIndex, int otherColumnLength) {
         for (int columnIndex = 1; columnIndex <= size; columnIndex++) {
             String value = (lineIndex == 0) ? String.valueOf(columnIndex) : String.valueOf(lineIndex * columnIndex);
             numbers.append(VERTICAL_LINE);
