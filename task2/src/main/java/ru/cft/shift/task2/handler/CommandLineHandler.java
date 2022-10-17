@@ -16,18 +16,18 @@ public class CommandLineHandler {
     }
 
     public static void execute(String[] args) {
-        String outputFileName;
+        String inputFileName;
         if (args.length == 0) {
-            logger.error("Empty parameters. Example: [outputFileName -d logFileName]");
+            logger.error("Empty parameters. Example: [inputFileName -d logFileName]");
         } else {
-            outputFileName = args[0];
+            inputFileName = args[0];
             if (args.length == 3) {
                 if (args[1].equals("-d")) {
                     enableFileLogger(args[2]);
                 }
             }
 
-            Optional<Shape> optionalShape = CustomFileReader.readShapeParametersFromFile(outputFileName);
+            Optional<Shape> optionalShape = CustomFileReader.readShapeParametersFromFile(inputFileName);
             optionalShape.ifPresent(shape -> logger.info(NEW_LINE + shape.getContent()));
         }
     }
