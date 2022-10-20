@@ -32,14 +32,23 @@ public class Circle extends Shape {
 
     public static class CircleBuilderImpl implements ShapeBuilder {
         private static final Logger log = CustomLoggerFactory.getLogger(Circle.CircleBuilderImpl.class.getName());
-        private final double radius;
 
-        public CircleBuilderImpl(double radius) {
-            this.radius = radius;
+        private final String parameter;
+
+        public CircleBuilderImpl(String parameter) {
+            this.parameter = parameter;
         }
 
         @Override
         public Optional<Shape> build() {
+            double radius;
+            try {
+                radius = Double.parseDouble(parameter.trim());
+            } catch (NumberFormatException e) {
+                log.error("Wrong type of parameter for Circle: \"" + parameter + "\". Must be number");
+                return Optional.empty();
+            }
+
             if (!validate(radius)) {
                 return Optional.empty();
             }

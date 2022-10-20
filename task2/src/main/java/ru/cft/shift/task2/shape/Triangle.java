@@ -14,7 +14,7 @@ public class Triangle extends Shape {
     private final double thirdSideCorner;
 
     private Triangle(double firstSide, double secondSide, double thirdSide, double firstSideCorner,
-                    double secondSideCorner, double thirdSideCorner, double area, double perimeter) {
+                     double secondSideCorner, double thirdSideCorner, double area, double perimeter) {
 
         super(ShapeType.TRIANGLE, area, perimeter);
 
@@ -63,18 +63,32 @@ public class Triangle extends Shape {
 
     public static class TriangleBuilderImpl implements ShapeBuilder {
         private static final Logger log = CustomLoggerFactory.getLogger(Triangle.TriangleBuilderImpl.class.getName());
-        private final double firstSide;
-        private final double secondSide;
-        private final double thirdSide;
+        private static final String SEPARATOR = " ";
 
-        public TriangleBuilderImpl(double firstSide, double secondSide, double thirdSide) {
-            this.firstSide = firstSide;
-            this.secondSide = secondSide;
-            this.thirdSide = thirdSide;
+        private final String params;
+
+        public TriangleBuilderImpl(String params) {
+            this.params = params;
         }
 
         @Override
         public Optional<Shape> build() {
+            double firstSide;
+            double secondSide;
+            double thirdSide;
+            try {
+                String[] values = params.split(SEPARATOR);
+                firstSide = Double.parseDouble(values[0]);
+                secondSide = Double.parseDouble(values[1]);
+                thirdSide = Double.parseDouble(values[2]);
+            } catch (NumberFormatException e) {
+                log.error("Wrong type of parameters for Triangle: \"" + params + "\". Must be numbers");
+                return Optional.empty();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                log.error("Wrong amount of parameters for Triangle: \"" + params + "\". Must be 3 parameters");
+                return Optional.empty();
+            }
+
             if (!validate(firstSide, secondSide, thirdSide)) {
                 return Optional.empty();
             }

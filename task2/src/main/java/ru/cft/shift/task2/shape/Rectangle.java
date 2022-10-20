@@ -39,16 +39,30 @@ public class Rectangle extends Shape {
 
     public static class RectangleBuilderImpl implements ShapeBuilder {
         private static final Logger log = CustomLoggerFactory.getLogger(Rectangle.RectangleBuilderImpl.class.getName());
-        private final double oneSide;
-        private final double secondSide;
+        private static final String SEPARATOR = " ";
 
-        public RectangleBuilderImpl(double oneSide, double secondSide) {
-            this.oneSide = oneSide;
-            this.secondSide = secondSide;
+        private final String params;
+
+        public RectangleBuilderImpl(String params) {
+            this.params = params;
         }
 
         @Override
         public Optional<Shape> build() {
+            double oneSide;
+            double secondSide;
+            try {
+                String[] values = params.split(SEPARATOR);
+                oneSide = Double.parseDouble(values[0]);
+                secondSide = Double.parseDouble(values[1]);
+            } catch (NumberFormatException e) {
+                log.error("Wrong type of parameters for Rectangle: \"" + params + "\". Must be numbers");
+                return Optional.empty();
+            } catch (ArrayIndexOutOfBoundsException e) {
+                log.error("Wrong amount of parameters for Rectangle: \"" + params + "\". Must be 2 parameters");
+                return Optional.empty();
+            }
+
             if (!validate(oneSide, secondSide)) {
                 return Optional.empty();
             }
@@ -75,7 +89,7 @@ public class Rectangle extends Shape {
         }
 
         static double calculatePerimeter(double firstSide, double secondSide) {
-            return  2 * (firstSide + secondSide);
+            return 2 * (firstSide + secondSide);
         }
 
         static double calculateDiagonal(double firstSide, double secondSide) {
