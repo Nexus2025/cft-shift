@@ -1,4 +1,3 @@
 rootProject.name = '_2022_02_frolov'
 include 'task1'
 include 'task2'
-
